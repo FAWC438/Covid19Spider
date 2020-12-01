@@ -36,6 +36,10 @@ for item in items:
         s = s.strip()
         if s == 'Unknown':
             s = 'NA'
+        # 人口不足百万的国家
+        if s == '0' and (
+                key == 'Confirmed Per Million' or key == 'Deceased Per Million' or key == 'Recovered Per Million'):
+            s = 'NA'
         data[key] = s
         index += 1
     csv_writer.writerow(data)
