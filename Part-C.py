@@ -13,8 +13,7 @@ plt.rcParams['figure.dpi'] = 300  # 分辨率
 plt.style.use('Solarize_Light2')
 
 countries = pd.read_csv('csvFile/Covid19Data2020-12-15.csv', encoding='utf-8', skiprows=[1])['Name'].to_list()
-df = DataFrame(
-    columns=countries)
+df = DataFrame(columns=countries)
 
 # 只读取每日确诊数据
 for i in range(1, 16):
