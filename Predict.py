@@ -39,34 +39,34 @@ print(df)
 
 fig, ax = plt.subplots()
 
-# 原始数据
+# 1.原始数据
 ax.plot(np.arange(5), df.loc[10:14, 'Confirmed'], marker='o')
 
-# 霍尔特(Holt)线性趋势法
+# 2.霍尔特(Holt)线性趋势法
 df.loc[0:9, 'Holt_linear'] = df.loc[0:9, 'Confirmed']
 fit = Holt(np.asarray(df.loc[0:9, 'Confirmed'])).fit(smoothing_level=1, smoothing_trend=0.2)
 df.loc[10:14, 'Holt_linear'] = fit.forecast(5)
 ax.plot(np.arange(5), df.loc[10:14, 'Holt_linear'], marker='o')
 df_error.at[0, 'Value'] = sqrt(mean_squared_error(df.loc[10:14, 'Confirmed'], df.loc[10:14, 'Holt_linear']))
 
-# 自回归移动平均模型（ARIMA）
+# 3.自回归移动平均模型（ARIMA）
 df.loc[0:9, 'ARIMA'] = df.loc[0:9, 'Confirmed']
 fit1 = sm.tsa.statespace.SARIMAX(df.loc[0:9, 'Confirmed'], order=(2, 1, 7)).fit()
 df.loc[10:14, 'ARIMA'] = fit1.predict(start=10, end=14, dynamic=True)
 ax.plot(np.arange(5), df.loc[10:14, 'ARIMA'], marker='o')
 df_error.at[1, 'Value'] = sqrt(mean_squared_error(df.loc[10:14, 'Confirmed'], df.loc[10:14, 'ARIMA']))
 
-# 生成滑动窗口为2的预测值
+# 4.生成滑动窗口为2的预测值
 df['Roll_2'] = df['Confirmed'].rolling(window=2, center=False).mean()
 ax.plot(np.arange(5), df.loc[10:14, 'Roll_2'], marker='o')
 df_error.at[2, 'Value'] = sqrt(mean_squared_error(df.loc[10:14, 'Confirmed'], df.loc[10:14, 'Roll_2']))
 
-# 生成滑动窗口为3的预测值
+# 5.生成滑动窗口为3的预测值
 df['Roll_3'] = df['Confirmed'].rolling(window=3, center=False).mean()
 ax.plot(np.arange(5), df.loc[10:14, 'Roll_3'], marker='o')
 df_error.at[3, 'Value'] = sqrt(mean_squared_error(df.loc[10:14, 'Confirmed'], df.loc[10:14, 'Roll_3']))
 
-# 生成滑动窗口为4的预测值
+# 6.生成滑动窗口为4的预测值
 df['Roll_4'] = df['Confirmed'].rolling(window=4, center=False).mean()
 ax.plot(np.arange(5), df.loc[10:14, 'Roll_4'], marker='o')
 df_error.at[4, 'Value'] = sqrt(mean_squared_error(df.loc[10:14, 'Confirmed'], df.loc[10:14, 'Roll_4']))
@@ -81,4 +81,5 @@ ax.set_title('12月11日至15日全球确诊人数预测')
 df.to_csv('csvResult/预测分析.csv', index=False)
 df_error.to_csv('csvResult/预测误差.csv', index=False)
 
+plt.savefig('imgResult/12月11日至15日全球确诊人数预测.png')
 plt.show()
